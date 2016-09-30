@@ -198,8 +198,8 @@ public class Interfaz {
 		btnMenosE.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(Integer.parseInt(txtEnergia.getText())!=0){
-					txtEnergia.setText(String.valueOf(Integer.parseInt(txtEnergia.getText())-1));
+				if(Float.parseFloat(txtEnergia.getText())!=0){
+					txtEnergia.setText(String.valueOf(Float.parseFloat(txtEnergia.getText())-1));
 
 					txtTotal.setText(String.valueOf(Integer.parseInt(txtTotal.getText())+1));
 				}
