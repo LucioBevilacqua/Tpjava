@@ -7,29 +7,72 @@ import java.sql.*;
 import entidades.*;
 import utils.ApplicationException;
 
-public class DataPersona {
+public class DataPersonaje {
 	
 	
-	public DataPersona(){
+	public DataPersonaje(){
 		
 	}
 	
-	public void add(Personaje p){
+	public static boolean verificarNombre(Personaje per){
+		boolean valido=true;
+		
+		PreparedStatement stmt=null;
+		ResultSet rs=null;
+		try {
+			stmt = FactoryConexion.getInstancia().getConn().prepareStatement(
+					"select nombre "
+					+ "from personajes"
+					+ " where nombre=?");
+			stmt.setString(1, per.getNombre().trim());
+			rs= stmt.executeQuery();			
+			if(rs.next()){
+				valido=false;
+			}
+			
+				
+		}catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			try {
+				if(stmt!=null)stmt.close();
+				FactoryConexion.getInstancia().releaseConn();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ApplicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return valido;
+	}
+	
+	public void add(Personaje p) {
 		ResultSet rs=null;
 		PreparedStatement stmt=null;
 		
 		
 		try {
 			stmt=FactoryConexion.getInstancia().getConn().prepareStatement(
-					"insert into personas(dni,nombre, apellido,habilitado)"+
-					" values(?,?,?,?)",PreparedStatement.RETURN_GENERATED_KEYS);
+					"insert into personajes(nombre, energia, defensa, ataque, evasion, puntosTotales)"+
+					" values(?,?,?,?, ?, ?)",PreparedStatement.RETURN_GENERATED_KEYS);
 			// PreparedStatement.RETURN_GENERATED_KEYS to be able to retrieve id generated on the db
 			// by the autoincrement column. Otherwise don't use it
-						
-			stmt.setInt(1, p.getDni());
-			stmt.setString(2, p.getNombre());
-			stmt.setString(3, p.getApellido());
-			stmt.setBoolean(4, p.isHabilitado());
+			
+			
+			
+			stmt.setString(1, p.getNombre().trim());
+			stmt.setFloat(2, p.getEnergia());
+			stmt.setFloat(3, p.getDefensa());
+			stmt.setInt(4, p.getAtaque());
+			stmt.setInt(5, p.getEvasion());
+			stmt.setInt(6, p.getPuntosTotales());
+			
 			stmt.execute();
 			
 			//after executing the insert use the following lines to retrieve the id
@@ -65,14 +108,16 @@ public class DataPersona {
 		
 		try {
 			stmt= FactoryConexion.getInstancia().getConn().prepareStatement(
-					"update personas set dni=?, nombre=?, apellido=?, habilitado=?"+
+					"update personajes set nombre=?, energia=?, defensa=?, ataque=?, evasion=?, puntosTotales=?"+
 					" where id=?");
 			
-			stmt.setInt(1, p.getDni());
-			stmt.setString(2, p.getNombre());
-			stmt.setString(3, p.getApellido());
-			stmt.setBoolean(4, p.isHabilitado());
-			stmt.setInt(5, p.getId());
+			stmt.setString(1, p.getNombre());
+			stmt.setFloat(2, p.getEnergia());
+			stmt.setFloat(3, p.getDefensa());
+			stmt.setInt(4, p.getAtaque());
+			stmt.setInt(5, p.getEvasion());
+			stmt.setInt(6, p.getPuntosTotales());
+			stmt.setInt(7, p.getId());
 			stmt.execute();
 			
 			
@@ -102,7 +147,7 @@ public class DataPersona {
 		
 		try {
 			stmt = FactoryConexion.getInstancia().getConn().prepareStatement(
-					"delete from personas where id=?");
+					"delete from personajes where id=?");
 			stmt.setInt(1, p.getId());
 			stmt.execute();
 		} catch (SQLException e) {
@@ -134,16 +179,20 @@ public class DataPersona {
 		ResultSet rs=null;
 		try {
 			stmt = FactoryConexion.getInstancia().getConn().prepareStatement(
-					"select id, dni, nombre, apellido, habilitado from personas where dni=?");
-			stmt.setInt(1, per.getDni());
+					"select id, nombre, energia, defensa, ataque, evasion, puntosTotales "
+					+ "from personajes"
+					+ " where id=?");
+			stmt.setInt(1, per.getId());
 			rs= stmt.executeQuery();
 			if(rs!=null && rs.next()){
 				p=new Personaje();
 				p.setId(rs.getInt("id"));
-				p.setDni(rs.getInt("dni"));
 				p.setNombre(rs.getString("nombre"));
-				p.setApellido(rs.getString("apellido"));
-				p.setHabilitado(rs.getBoolean("habilitado"));
+				p.setEnergia(rs.getFloat("energia"));
+				p.setDefensa(rs.getInt("defensa"));
+				p.setAtaque(rs.getInt("ataque"));
+				p.setEvasion(rs.getInt("evasion"));
+				p.setPuntosTotales(rs.getInt("puntosTotales"));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

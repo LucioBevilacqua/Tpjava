@@ -2,7 +2,6 @@ package data;
 
 import java.sql.*;
 
-import org.omg.CORBA.portable.ApplicationException;
 import utils.*;
 
 public class FactoryConexion {
@@ -10,8 +9,8 @@ public class FactoryConexion {
 	private String dbDriver="com.mysql.jdbc.Driver";
 	private String host="localhost";
 	private String port="3306";
-	private String user="java2016";
-	private String pass="java";
+	private String user="root";
+	private String pass="root";
 	private String db="java2016";
 	private String dbType="mysql";
 	
@@ -40,7 +39,7 @@ public class FactoryConexion {
 			if(conn==null || conn.isClosed()){
 				conn = DriverManager.getConnection(
 						"jdbc:"+dbType+"://"+host+":"+port+"/"+
-						db+"?user="+user+"&password="+pass);
+						db+"?user="+user+"&password="+pass+"&useSSL=false");
 				cantConn++;
 			}
 		} catch (SQLException e) {

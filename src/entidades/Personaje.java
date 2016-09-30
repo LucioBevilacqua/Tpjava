@@ -23,6 +23,10 @@ public class Personaje {
 		this.puntosTotales = puntosTotales;
 				
 	}
+	
+	public Personaje(){
+		
+	}
 
 	public int getId() {
 		return id;
