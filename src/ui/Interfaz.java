@@ -24,18 +24,28 @@ import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.ImageIcon;
+import java.awt.CardLayout;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.plaf.SliderUI;
+import javax.swing.JSeparator;
+import javax.swing.JSlider;
+import javax.swing.SwingConstants;
 	
 public class Interfaz {
 
 	private JFrame frame;
-	private JFrame frame2;
 	private JTextField txtId;
 	private JTextField txtNombre;
-	private JTextField txtEnergia;
-	private JTextField txtDefensa;
-	private JTextField txtAtaque;
-	private JTextField txtEvasion;
-	private JTextField txtTotal;
+	private CardLayout cc;
+	private JPanel panelMenu;
+	private JPanel panelCreacion, panelSeleccionPersonaje;
+	private JLabel txtEnergia;
+	private JLabel txtTotal ;
+	private JLabel txtDefensa, txtAtaque, txtEvasion;
+	private JSlider sliderDefensa, sliderEnergia, sliderEvasion, sliderAtaque;
+	private int total = 200;
+	
 	
 	private ABMCPersonaje ctrl;
 
@@ -67,83 +77,266 @@ public class Interfaz {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		cc = new CardLayout();
 		frame = new JFrame();
-		frame2 = new JFrame();
 		frame.setBounds(100, 100, 621, 410);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+		frame.getContentPane().setLayout(cc);
 		
-		txtId = new JTextField();
-		txtId.setBounds(137, 29, 166, 20);
-		frame.getContentPane().add(txtId);
-		txtId.setColumns(10);
+		panelMenu = new JPanel();
+		frame.getContentPane().add(panelMenu, "panelMenu");
+		panelMenu.setLayout(null);
 		
-		JLabel lblId = new JLabel("ID");
-		lblId.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
-		lblId.setBounds(28, 30, 46, 14);
-		frame.getContentPane().add(lblId);
+		panelCreacion = new JPanel();
+		frame.getContentPane().add(panelCreacion, "panelCreacion");
+		panelCreacion.setLayout(null);
 		
-		JLabel lblNombre = new JLabel("Nombre:");
-		lblNombre.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
-		lblNombre.setBounds(28, 63, 96, 14);
-		frame.getContentPane().add(lblNombre);
 		
-		JLabel lblEnergia = new JLabel("Energia:");
-		lblEnergia.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
-		lblEnergia.setBounds(28, 88, 79, 18);
-		frame.getContentPane().add(lblEnergia);
+		JButton btbIniciarCreacion = new JButton("Administrar personajes");
+		btbIniciarCreacion.setBounds(173, 71, 226, 23);
+		panelMenu.add(btbIniciarCreacion);			
+		btbIniciarCreacion.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				iniciarCreacion();
+				panelMenu.setVisible(false);
+				panelCreacion.setVisible(true);
+
+			}
+		});
 		
-		JLabel lblDefensa = new JLabel("Defensa:");
-		lblDefensa.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
-		lblDefensa.setBounds(28, 117, 79, 14);
-		frame.getContentPane().add(lblDefensa);
+		JButton btnJugar = new JButton("JUGAR");
+		btnJugar.setBounds(173, 37, 226, 23);
+		btnJugar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				iniciarCreacion();
+				panelMenu.setVisible(false);
+				panelSeleccionPersonaje.setVisible(true);
+
+			}
+		});
+		panelMenu.add(btnJugar);
 		
-		JLabel lblAtaque = new JLabel("Ataque:");
-		lblAtaque.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
-		lblAtaque.setBounds(28, 142, 79, 19);
-		frame.getContentPane().add(lblAtaque);
+		JLabel txtInfo = new JLabel("");
+		txtInfo.setBounds(603, 23, 0, 0);
+		panelCreacion.add(txtInfo);
 		
-		JLabel lblEvasion = new JLabel("Evasi\u00F3n:");
-		lblEvasion.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
-		lblEvasion.setBounds(28, 167, 79, 14);
-		frame.getContentPane().add(lblEvasion);
+		JButton btnEliminar = new JButton("Eliminar");
+		btnEliminar.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		btnEliminar.setBounds(296, 312, 137, 23);
+		panelCreacion.add(btnEliminar);
+		btnEliminar.setForeground(Color.RED);
 		
-		JLabel lblTotalrestante = new JLabel("Total/restante:");
-		lblTotalrestante.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
-		lblTotalrestante.setBounds(28, 192, 125, 14);
-		frame.getContentPane().add(lblTotalrestante);
+		JButton btnCrear = new JButton("Crear");
+		btnCrear.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		btnCrear.setBounds(53, 312, 108, 23);
+		panelCreacion.add(btnCrear);
 		
-		txtNombre = new JTextField();
-		txtNombre.setColumns(10);
-		txtNombre.setBounds(137, 62, 265, 20);
-		frame.getContentPane().add(txtNombre);
 		
-		txtEnergia = new JTextField();
-		txtEnergia.setColumns(10);
-		txtEnergia.setBounds(157, 89, 32, 20);
-		frame.getContentPane().add(txtEnergia);
-		
-		txtDefensa = new JTextField();
-		txtDefensa.setColumns(10);
-		txtDefensa.setBounds(157, 116, 32, 20);
-		frame.getContentPane().add(txtDefensa);
-		
-		txtAtaque = new JTextField();
-		txtAtaque.setColumns(10);
-		txtAtaque.setBounds(157, 143, 32, 20);
-		frame.getContentPane().add(txtAtaque);
-		
-		txtEvasion = new JTextField();
-		txtEvasion.setColumns(10);
-		txtEvasion.setBounds(157, 166, 32, 20);
-		frame.getContentPane().add(txtEvasion);
-		
-		txtTotal = new JTextField();
-		txtTotal.setColumns(10);
-		txtTotal.setBounds(137, 191, 265, 20);
-		frame.getContentPane().add(txtTotal);
+		JButton btnModificar = new JButton("Modificar");
+		btnModificar.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		btnModificar.setBounds(165, 312, 121, 23);
+		panelCreacion.add(btnModificar);
 		
 		JButton btnBuscar = new JButton("Buscar");
+		btnBuscar.setBounds(458, 15, 108, 19);
+		panelCreacion.add(btnBuscar);
+		
+		txtNombre = new JTextField();
+		txtNombre.setBounds(125, 82, 145, 20);
+		panelCreacion.add(txtNombre);
+		txtNombre.setColumns(10);
+		
+		JLabel lblTotalrestante = new JLabel("Total/restante:");
+		lblTotalrestante.setBounds(53, 267, 108, 19);
+		panelCreacion.add(lblTotalrestante);
+		lblTotalrestante.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
+		
+		JLabel lblEvasion = new JLabel("Evasi\u00F3n");
+		lblEvasion.setBounds(263, 228, 59, 26);
+		panelCreacion.add(lblEvasion);
+		lblEvasion.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
+		
+		JLabel lblAtaque = new JLabel("Ataque");
+		lblAtaque.setBounds(263, 190, 63, 27);
+		panelCreacion.add(lblAtaque);
+		lblAtaque.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
+		
+		JLabel lblDefensa = new JLabel("Defensa");
+		lblDefensa.setBounds(263, 156, 63, 19);
+		panelCreacion.add(lblDefensa);
+		lblDefensa.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		
+		JLabel lblEnergia = new JLabel("Energia");
+		lblEnergia.setBounds(263, 113, 57, 29);
+		panelCreacion.add(lblEnergia);
+		lblEnergia.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
+		
+		JLabel lblNombre = new JLabel("Nombre:");
+		lblNombre.setBounds(53, 81, 62, 19);
+		panelCreacion.add(lblNombre);
+		lblNombre.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
+		
+		JLabel lblId = new JLabel("ID");
+		lblId.setBounds(331, 15, 15, 19);
+		panelCreacion.add(lblId);
+		lblId.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
+		
+		txtId = new JTextField();
+		txtId.setToolTipText("");
+		txtId.setBounds(356, 16, 92, 20);
+		panelCreacion.add(txtId);
+		txtId.setColumns(10);
+		
+		
+		
+		sliderEnergia = new JSlider();
+		sliderEnergia.setValue(0);
+		sliderEnergia.setMaximum(200);
+		sliderEnergia.setBounds(63, 120, 137, 26);
+		sliderEnergia.setMinorTickSpacing(1);
+		sliderEnergia.setMajorTickSpacing(10);
+		sliderEnergia.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent event) {
+            	
+                int current = ((JSlider)event.getSource()).getValue();
+                txtEnergia.setText(String.valueOf(current));             
+                
+                txtTotal.setText(String.valueOf(total-Integer.parseInt(txtAtaque.getText())-Integer.parseInt(txtEvasion.getText())-Integer.parseInt(txtDefensa.getText())-current));
+                
+            }
+        });
+		panelCreacion.add(sliderEnergia);
+		
+		 txtEnergia = new JLabel("0");
+		 txtEnergia.setHorizontalAlignment(SwingConstants.CENTER);
+		 txtEnergia.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		txtEnergia.setBounds(210, 113, 46, 29);
+		panelCreacion.add(txtEnergia);
+		
+		JSeparator separator = new JSeparator();
+		separator.setBounds(53, 113, 283, 34);
+		panelCreacion.add(separator);
+		
+		txtTotal = new JLabel("");
+		txtTotal.setFont(new Font("Lucida Sans", Font.BOLD | Font.ITALIC, 18));
+		txtTotal.setBounds(167, 264, 81, 24);
+		panelCreacion.add(txtTotal);
+		
+		txtDefensa = new JLabel("0");
+		txtDefensa.setHorizontalAlignment(SwingConstants.CENTER);
+		txtDefensa.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		txtDefensa.setBounds(210, 146, 46, 34);
+		panelCreacion.add(txtDefensa);
+		
+		sliderDefensa = new JSlider();
+		sliderDefensa.setValue(0);
+		sliderDefensa.setMaximum(20);
+		sliderDefensa.setBounds(63, 154, 137, 26);
+		sliderDefensa.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent event) {
+                int current = ((JSlider)event.getSource()).getValue();
+                txtDefensa.setText(String.valueOf(current));
+                txtTotal.setText(String.valueOf(total-Integer.parseInt(txtAtaque.getText())-Integer.parseInt(txtEvasion.getText())-Integer.parseInt(txtEnergia.getText())-current));
+
+            }
+        });
+		panelCreacion.add(sliderDefensa);
+		
+		JSeparator separator_1 = new JSeparator();
+		separator_1.setBounds(53, 146, 283, 36);
+		panelCreacion.add(separator_1);
+		
+		txtAtaque = new JLabel("0");
+		txtAtaque.setHorizontalAlignment(SwingConstants.CENTER);
+		txtAtaque.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		txtAtaque.setBounds(210, 186, 45, 31);
+		panelCreacion.add(txtAtaque);
+		
+		sliderAtaque = new JSlider();
+		sliderAtaque.setValue(0);
+		sliderAtaque.setMaximum(200);
+		sliderAtaque.setBounds(63, 191, 137, 26);
+		sliderAtaque.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent event) {
+                int current = ((JSlider)event.getSource()).getValue();
+                txtAtaque.setText(String.valueOf(current));
+                txtTotal.setText(String.valueOf(total-Integer.parseInt(txtEnergia.getText())-Integer.parseInt(txtEvasion.getText())-Integer.parseInt(txtDefensa.getText())-current));
+
+            }
+        });
+		panelCreacion.add(sliderAtaque);
+		
+		JSeparator separator_2 = new JSeparator();
+		separator_2.setBounds(53, 186, 284, 34);
+		panelCreacion.add(separator_2);
+		
+		txtEvasion = new JLabel("0");
+		txtEvasion.setHorizontalAlignment(SwingConstants.CENTER);
+		txtEvasion.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		txtEvasion.setBounds(210, 228, 46, 26);
+		panelCreacion.add(txtEvasion);
+		
+		sliderEvasion = new JSlider();
+		sliderEvasion.setValue(0);
+		sliderEvasion.setMaximum(80);
+		sliderEvasion.setBounds(63, 228, 137, 26);
+		sliderEvasion.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent event) {
+                int current = ((JSlider)event.getSource()).getValue();
+                txtEvasion.setText(String.valueOf(current));
+                txtTotal.setText(String.valueOf(total-Integer.parseInt(txtAtaque.getText())-Integer.parseInt(txtEnergia.getText())-Integer.parseInt(txtDefensa.getText())-current));
+
+            }
+        });
+		panelCreacion.add(sliderEvasion);
+		
+		JSeparator separator_3 = new JSeparator();
+		separator_3.setBounds(52, 221, 284, 32);
+		panelCreacion.add(separator_3);
+		
+		JSeparator separator_4 = new JSeparator();
+		separator_4.setBounds(53, 255, 284, 34);
+		panelCreacion.add(separator_4);
+		
+		JButton btnVolver = new JButton("");
+		btnVolver.setIcon(new ImageIcon(Interfaz.class.getResource("/com/sun/javafx/scene/control/skin/caspian/fxvk-backspace-button.png")));
+		btnVolver.setBounds(10, 11, 57, 31);
+		panelCreacion.add(btnVolver);
+		
+		panelSeleccionPersonaje = new JPanel();
+		frame.getContentPane().add(panelSeleccionPersonaje, "name_491738062685251");
+		panelSeleccionPersonaje.setLayout(null);
+		
+		JSeparator separator_5 = new JSeparator();
+		separator_5.setOrientation(SwingConstants.VERTICAL);
+		separator_5.setBounds(303, 11, 292, 355);
+		panelSeleccionPersonaje.add(separator_5);
+		
+		JButton btnVolver1 = new JButton("");
+		btnVolver1.setIcon(new ImageIcon(Interfaz.class.getResource("/com/sun/javafx/scene/control/skin/caspian/fxvk-backspace-button.png")));
+		btnVolver1.setBounds(10, 11, 54, 35);
+		btnVolver1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				panelSeleccionPersonaje.setVisible(false);
+				panelMenu.setVisible(true);
+				limpiarCampos();
+			}
+		});
+		panelSeleccionPersonaje.add(btnVolver1);
+		btnVolver.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				panelCreacion.setVisible(false);
+				panelMenu.setVisible(true);
+				limpiarCampos();
+			}
+		});
+		
+		
+		
 		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
@@ -154,187 +347,28 @@ public class Interfaz {
 				buscar();
 			}
 		});
-		btnBuscar.setBounds(313, 28, 89, 23);
-		frame.getContentPane().add(btnBuscar);
-		
-		JButton btnCrear = new JButton("Crear");
-		btnCrear.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				agregar();
-			}
-		});
-		btnCrear.setBounds(28, 260, 125, 23);
-		frame.getContentPane().add(btnCrear);
-		
-		
-		JButton btnModificar = new JButton("Modificar");
 		btnModificar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				modificar();
 			}
 		});
-		btnModificar.setBounds(163, 232, 125, 23);
-		frame.getContentPane().add(btnModificar);
-		
-		JButton btnEliminar = new JButton("Eliminar");
-		btnEliminar.setForeground(Color.RED);
+		btnCrear.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				agregar();
+				
+			}
+		});
 		btnEliminar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				eliminar();
 			}
 		});
-		btnEliminar.setBounds(298, 232, 102, 23);
-		frame.getContentPane().add(btnEliminar);
-		
-		JLabel txtInfo = new JLabel("");
-		txtInfo.setBounds(28, 294, 372, 14);
-		frame.getContentPane().add(txtInfo);
-		
-		
-		
-		JButton btnMenosE = new JButton("");
-		btnMenosE.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(Float.parseFloat(txtEnergia.getText())!=0){
-					txtEnergia.setText(String.valueOf(Float.parseFloat(txtEnergia.getText())-1));
-
-					txtTotal.setText(String.valueOf(Integer.parseInt(txtTotal.getText())+1));
-				}
-			}
-		});
-		btnMenosE.setIcon(new ImageIcon(Interfaz.class.getResource("/com/sun/javafx/scene/web/skin/DrawHorizontalLine_16x16_JFX.png")));
-		btnMenosE.setBounds(133, 89, 20, 20);
-		frame.getContentPane().add(btnMenosE);
-		
-		
-		
-		
-		JButton btbIniciarCreacion = new JButton("Iniciar Creacion");
-		btbIniciarCreacion.setBounds(28, 232, 125, 23);
-		frame.getContentPane().add(btbIniciarCreacion);
-		
-		
-		
-		JButton btbMenosD = new JButton("");
-		btbMenosD.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(Integer.parseInt(txtDefensa.getText())!=0){
-					txtDefensa.setText(String.valueOf(Integer.parseInt(txtDefensa.getText())-1));
-
-					txtTotal.setText(String.valueOf(Integer.parseInt(txtTotal.getText())+1));
-				}
-			}
-		});
-		btbMenosD.setIcon(new ImageIcon(Interfaz.class.getResource("/com/sun/javafx/scene/web/skin/DrawHorizontalLine_16x16_JFX.png")));
-		btbMenosD.setBounds(133, 115, 20, 20);
-		frame.getContentPane().add(btbMenosD);
-		
-		
-		
-		JButton btnMenosA = new JButton("");
-		btnMenosA.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(Integer.parseInt(txtAtaque.getText())!=0){
-					txtAtaque.setText(String.valueOf(Integer.parseInt(txtAtaque.getText())-1));
-
-					txtTotal.setText(String.valueOf(Integer.parseInt(txtTotal.getText())+1));
-				}
-			}
-		});
-		btnMenosA.setIcon(new ImageIcon(Interfaz.class.getResource("/com/sun/javafx/scene/web/skin/DrawHorizontalLine_16x16_JFX.png")));
-		btnMenosA.setBounds(133, 142, 20, 20);
-		frame.getContentPane().add(btnMenosA);
-		
-		
-		
-		JButton btnMenosEv = new JButton("");
-		btnMenosEv.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(Integer.parseInt(txtEvasion.getText())!=0){
-					txtEvasion.setText(String.valueOf(Integer.parseInt(txtEvasion.getText())-1));
-
-					txtTotal.setText(String.valueOf(Integer.parseInt(txtTotal.getText())+1));
-				}
-			}
-		});
-		btnMenosEv.setIcon(new ImageIcon(Interfaz.class.getResource("/com/sun/javafx/scene/web/skin/DrawHorizontalLine_16x16_JFX.png")));
-		btnMenosEv.setBounds(133, 165, 20, 20);
-		frame.getContentPane().add(btnMenosEv);
-		
-		JButton btnMasEn = new JButton("");
-		btnMasEn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				
-				txtEnergia.setText(String.valueOf(Float.parseFloat(txtEnergia.getText())+1));
-				txtTotal.setText(String.valueOf(Integer.parseInt(txtTotal.getText())-1));
-			}
-		});
-		btnMasEn.setIcon(new ImageIcon(Interfaz.class.getResource("/com/sun/javafx/scene/control/skin/caspian/images/capslock-icon.png")));
-		btnMasEn.setBounds(197, 90, 20, 20);
-		frame.getContentPane().add(btnMasEn);
-		
-		
-		
-		
-		JButton btnMasD = new JButton("");
-		btnMasD.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(Integer.parseInt(txtDefensa.getText())!=20){
-					txtDefensa.setText(String.valueOf(Integer.parseInt(txtDefensa.getText())+1));
-					txtTotal.setText(String.valueOf(Integer.parseInt(txtTotal.getText())-1));
-				}
-			}
-		});
-		btnMasD.setIcon(new ImageIcon(Interfaz.class.getResource("/com/sun/javafx/scene/control/skin/caspian/images/capslock-icon.png")));
-		btnMasD.setBounds(197, 116, 20, 20);
-		frame.getContentPane().add(btnMasD);
-		
-		
-		
-		
-		JButton btnMasA = new JButton("");
-		btnMasA.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				
-				txtAtaque.setText(String.valueOf(Integer.parseInt(txtAtaque.getText())+1));
-				txtTotal.setText(String.valueOf(Integer.parseInt(txtTotal.getText())-1));
-			}
-		});
-		btnMasA.setIcon(new ImageIcon(Interfaz.class.getResource("/com/sun/javafx/scene/control/skin/caspian/images/capslock-icon.png")));
-		btnMasA.setBounds(197, 143, 20, 20);
-		frame.getContentPane().add(btnMasA);
-		
-		
-		
-		JButton btnMasEv = new JButton("");
-		btnMasEv.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(Integer.parseInt(txtEvasion.getText())!=80){
-					txtEvasion.setText(String.valueOf(Integer.parseInt(txtEvasion.getText())+1));
-					txtTotal.setText(String.valueOf(Integer.parseInt(txtTotal.getText())-1));
-				}
-			}
-		});
-		btnMasEv.setIcon(new ImageIcon(Interfaz.class.getResource("/com/sun/javafx/scene/control/skin/caspian/images/capslock-icon.png")));
-		btnMasEv.setBounds(197, 166, 20, 20);
-		frame.getContentPane().add(btnMasEv);
-		btbIniciarCreacion.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				iniciarCreacion();
-			}
-		});
 	}
+	
+	
+	
 	
 	protected void eliminar() {
 		ctrl.delete(MapearDeFormularioId());
@@ -379,8 +413,13 @@ public class Interfaz {
 			Personaje p=MapearDeFormulario();
 			if(DataPersonaje.verificarNombre(p)){
 			ctrl.add(p);
+			notifyUser(txtNombre.getText() + " creado con éxito");
 			MapearAFormulario(p);
-			//limpiarCampos();
+			limpiarCampos();
+
+			panelCreacion.setVisible(false);
+			panelMenu.setVisible(true);
+				
 			}else{
 				notifyUser("Nombre en uso");
 			}
@@ -388,12 +427,18 @@ public class Interfaz {
 	}
 
 	private void limpiarCampos() {
-		txtAtaque.setText("");
-		txtDefensa.setText("");
-		txtEnergia.setText("");
+		txtAtaque.setText("0");
+		txtDefensa.setText("0");
+		txtEnergia.setText("0");
 		txtNombre.setText("");
-		txtEvasion.setText("");
+		txtEvasion.setText("0");
 		txtTotal.setText("");
+
+		sliderAtaque.setValue(0);
+		sliderDefensa.setValue(0);
+		sliderEvasion.setValue(0);
+		sliderEnergia.setValue(0);
+		
 	}
 
 	protected void buscar() {
@@ -421,6 +466,10 @@ public class Interfaz {
 		txtEnergia.setText(String.valueOf(p.getEnergia()));
 		txtEvasion.setText(String.valueOf(p.getEvasion()));
 		txtTotal.setText(String.valueOf(p.getPuntosTotales()));
+		sliderEnergia.setValue((int) p.getEnergia());
+		sliderDefensa.setValue((int) p.getDefensa());
+		sliderAtaque.setValue((int) p.getAtaque());
+		sliderEvasion.setValue((int) p.getEvasion());
 	}
 	
 	
