@@ -27,7 +27,6 @@ import javax.swing.ImageIcon;
 import java.awt.CardLayout;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.plaf.SliderUI;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
@@ -124,27 +123,27 @@ public class Interfaz {
 		
 		JButton btnEliminar = new JButton("Eliminar");
 		btnEliminar.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
-		btnEliminar.setBounds(296, 312, 137, 23);
+		btnEliminar.setBounds(422, 312, 121, 23);
 		panelCreacion.add(btnEliminar);
 		btnEliminar.setForeground(Color.RED);
 		
 		JButton btnCrear = new JButton("Crear");
 		btnCrear.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
-		btnCrear.setBounds(53, 312, 108, 23);
+		btnCrear.setBounds(60, 312, 121, 23);
 		panelCreacion.add(btnCrear);
 		
 		
 		JButton btnModificar = new JButton("Modificar");
 		btnModificar.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
-		btnModificar.setBounds(165, 312, 121, 23);
+		btnModificar.setBounds(242, 312, 121, 23);
 		panelCreacion.add(btnModificar);
 		
 		JButton btnBuscar = new JButton("Buscar");
-		btnBuscar.setBounds(458, 15, 108, 19);
+		btnBuscar.setBounds(458, 15, 108, 20);
 		panelCreacion.add(btnBuscar);
 		
 		txtNombre = new JTextField();
-		txtNombre.setBounds(125, 82, 145, 20);
+		txtNombre.setBounds(125, 82, 201, 20);
 		panelCreacion.add(txtNombre);
 		txtNombre.setColumns(10);
 		
@@ -154,27 +153,27 @@ public class Interfaz {
 		lblTotalrestante.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
 		
 		JLabel lblEvasion = new JLabel("Evasi\u00F3n");
-		lblEvasion.setBounds(263, 228, 59, 26);
+		lblEvasion.setBounds(339, 226, 59, 26);
 		panelCreacion.add(lblEvasion);
 		lblEvasion.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
 		
 		JLabel lblAtaque = new JLabel("Ataque");
-		lblAtaque.setBounds(263, 190, 63, 27);
+		lblAtaque.setBounds(339, 188, 63, 27);
 		panelCreacion.add(lblAtaque);
 		lblAtaque.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
 		
 		JLabel lblDefensa = new JLabel("Defensa");
-		lblDefensa.setBounds(263, 156, 63, 19);
+		lblDefensa.setBounds(339, 154, 63, 19);
 		panelCreacion.add(lblDefensa);
 		lblDefensa.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
 		
 		JLabel lblEnergia = new JLabel("Energia");
-		lblEnergia.setBounds(263, 113, 57, 29);
+		lblEnergia.setBounds(339, 117, 57, 29);
 		panelCreacion.add(lblEnergia);
 		lblEnergia.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
 		
 		JLabel lblNombre = new JLabel("Nombre:");
-		lblNombre.setBounds(53, 81, 62, 19);
+		lblNombre.setBounds(53, 82, 62, 20);
 		panelCreacion.add(lblNombre);
 		lblNombre.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
 		
@@ -194,7 +193,7 @@ public class Interfaz {
 		sliderEnergia = new JSlider();
 		sliderEnergia.setValue(0);
 		sliderEnergia.setMaximum(200);
-		sliderEnergia.setBounds(63, 120, 137, 26);
+		sliderEnergia.setBounds(63, 120, 185, 26);
 		sliderEnergia.setMinorTickSpacing(1);
 		sliderEnergia.setMajorTickSpacing(10);
 		sliderEnergia.addChangeListener(new ChangeListener() {
@@ -212,11 +211,11 @@ public class Interfaz {
 		 txtEnergia = new JLabel("0");
 		 txtEnergia.setHorizontalAlignment(SwingConstants.CENTER);
 		 txtEnergia.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
-		txtEnergia.setBounds(210, 113, 46, 29);
+		txtEnergia.setBounds(276, 113, 46, 29);
 		panelCreacion.add(txtEnergia);
 		
 		JSeparator separator = new JSeparator();
-		separator.setBounds(53, 113, 283, 34);
+		separator.setBounds(53, 113, 395, 34);
 		panelCreacion.add(separator);
 		
 		txtTotal = new JLabel("");
@@ -227,13 +226,13 @@ public class Interfaz {
 		txtDefensa = new JLabel("0");
 		txtDefensa.setHorizontalAlignment(SwingConstants.CENTER);
 		txtDefensa.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
-		txtDefensa.setBounds(210, 146, 46, 34);
+		txtDefensa.setBounds(276, 146, 46, 34);
 		panelCreacion.add(txtDefensa);
 		
 		sliderDefensa = new JSlider();
 		sliderDefensa.setValue(0);
 		sliderDefensa.setMaximum(20);
-		sliderDefensa.setBounds(63, 154, 137, 26);
+		sliderDefensa.setBounds(63, 154, 185, 26);
 		sliderDefensa.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent event) {
                 int current = ((JSlider)event.getSource()).getValue();
@@ -245,19 +244,19 @@ public class Interfaz {
 		panelCreacion.add(sliderDefensa);
 		
 		JSeparator separator_1 = new JSeparator();
-		separator_1.setBounds(53, 146, 283, 36);
+		separator_1.setBounds(53, 146, 395, 34);
 		panelCreacion.add(separator_1);
 		
 		txtAtaque = new JLabel("0");
 		txtAtaque.setHorizontalAlignment(SwingConstants.CENTER);
 		txtAtaque.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
-		txtAtaque.setBounds(210, 186, 45, 31);
+		txtAtaque.setBounds(276, 186, 46, 31);
 		panelCreacion.add(txtAtaque);
 		
 		sliderAtaque = new JSlider();
 		sliderAtaque.setValue(0);
 		sliderAtaque.setMaximum(200);
-		sliderAtaque.setBounds(63, 191, 137, 26);
+		sliderAtaque.setBounds(63, 191, 185, 26);
 		sliderAtaque.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent event) {
                 int current = ((JSlider)event.getSource()).getValue();
@@ -269,19 +268,19 @@ public class Interfaz {
 		panelCreacion.add(sliderAtaque);
 		
 		JSeparator separator_2 = new JSeparator();
-		separator_2.setBounds(53, 186, 284, 34);
+		separator_2.setBounds(53, 186, 395, 34);
 		panelCreacion.add(separator_2);
 		
 		txtEvasion = new JLabel("0");
 		txtEvasion.setHorizontalAlignment(SwingConstants.CENTER);
 		txtEvasion.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
-		txtEvasion.setBounds(210, 228, 46, 26);
+		txtEvasion.setBounds(276, 226, 46, 26);
 		panelCreacion.add(txtEvasion);
 		
 		sliderEvasion = new JSlider();
 		sliderEvasion.setValue(0);
 		sliderEvasion.setMaximum(80);
-		sliderEvasion.setBounds(63, 228, 137, 26);
+		sliderEvasion.setBounds(63, 228, 185, 26);
 		sliderEvasion.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent event) {
                 int current = ((JSlider)event.getSource()).getValue();
@@ -293,11 +292,11 @@ public class Interfaz {
 		panelCreacion.add(sliderEvasion);
 		
 		JSeparator separator_3 = new JSeparator();
-		separator_3.setBounds(52, 221, 284, 32);
+		separator_3.setBounds(53, 221, 395, 34);
 		panelCreacion.add(separator_3);
 		
 		JSeparator separator_4 = new JSeparator();
-		separator_4.setBounds(53, 255, 284, 34);
+		separator_4.setBounds(53, 255, 395, 34);
 		panelCreacion.add(separator_4);
 		
 		JButton btnVolver = new JButton("");
@@ -372,6 +371,7 @@ public class Interfaz {
 	
 	protected void eliminar() {
 		ctrl.delete(MapearDeFormularioId());
+		
 		limpiarCampos();
 	}
 
@@ -415,10 +415,7 @@ public class Interfaz {
 			ctrl.add(p);
 			notifyUser(txtNombre.getText() + " creado con éxito");
 			MapearAFormulario(p);
-			limpiarCampos();
-
-			panelCreacion.setVisible(false);
-			panelMenu.setVisible(true);
+			limpiarCampos();		
 				
 			}else{
 				notifyUser("Nombre en uso");
@@ -442,12 +439,28 @@ public class Interfaz {
 	}
 
 	protected void buscar() {
+		if(idValido()){
 		Personaje p = ctrl.getPersonaje(MapearDeFormularioId());
 		if(p!=null){
 			MapearAFormulario(p);
 		}else{
 			notifyUser("Personaje con id: "+txtId.getText() + " no encontrado");
 		}
+		}
+	}
+
+	private boolean idValido() {
+		boolean valido=true;
+		if(txtId.getText().trim().length()==0){
+			valido=false;
+			notifyUser("Ingrese el ID a buscar");
+		}
+		if(valido && !txtId.getText().matches("[0-9]*")){
+			valido=false;
+			notifyUser("ID inválido");
+		}
+			
+		return valido;
 	}
 
 	private Personaje MapearDeFormularioId() {
@@ -487,15 +500,15 @@ public class Interfaz {
 	
 	public boolean datosValidos(){
 		boolean valido=true;
-		if(txtId.getText().trim().length()==0
-			|| txtNombre.getText().trim().length()==0){
+		if(txtAtaque.getText().trim().length()==0
+			|| txtNombre.getText().trim().length()==0
+			|| txtDefensa.getText().trim().length()==0
+			|| txtEvasion.getText().trim().length()==0
+			|| txtEnergia.getText().trim().length()==0){
 			valido=false;
 			notifyUser("Complete todos los campos");
 		}
-		if(valido && !txtId.getText().matches("[0-9]*")){
-			valido=false;
-			notifyUser("ID inválido");
-		}
+		
 			
 		return valido;
 	}
