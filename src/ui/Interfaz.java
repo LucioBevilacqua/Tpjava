@@ -49,11 +49,17 @@ public class Interfaz {
 	private int total = 200;
 	private Choice choice;
 	private Choice choice2;
-	private JSlider sliderA1,sliderEv1,sliderE1,sliderD1, sliderEv2,sliderE2,sliderD2,sliderA2;
-	
+	private JSlider sliderA1,sliderEv1,sliderE1,sliderD1, sliderEv2,sliderE2,sliderD2,sliderA2, sliderBatallaV1 ,sliderBatallaEn1,sliderBatallaD1,sliderBatallaEv1,sliderBatallaV2,sliderBatallaEn2,sliderBatallaD2,sliderBatallaEv2,sliderEnergiaAtaque;
+	private JButton btnDefender, btnAtacar, btnVolver1;
 	
 	private ABMCPersonaje ctrl;
-	private JLabel labelD1,labelA1,labelEv1,labelEv2,labelEn1,labelEn2,labelD2,labelA2;
+	private JLabel labelD1,labelA1,labelEv1,labelEv2,labelEn1,labelEn2,labelD2,labelA2, labelTurno, labelBatallaEv2, labelBatallaD2,labelBatallaV2, labelBatallaEn2 , labelBatallaEv1, labelBatallaV1, labelBatallaD1, labelBatallaEn1,lblNombrePersonaje2 , lblNombrePersonaje1;
+	private JPanel panelJugar;
+	private JLabel lblEnergiaAtaque;
+	private Personaje turno;
+	private JSeparator separator_8;
+	private JSeparator separator_9;
+	
 
 	/**
 	 * Launch the application.
@@ -85,7 +91,7 @@ public class Interfaz {
 	private void initialize() {
 		cc = new CardLayout();
 		frame = new JFrame();
-		frame.setBounds(100, 100, 669, 480);
+		frame.setBounds(100, 100, 662, 481);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(cc);
 		
@@ -320,7 +326,7 @@ public class Interfaz {
 		frame.getContentPane().add(panelSeleccionPersonaje, "name_491738062685251");
 		panelSeleccionPersonaje.setLayout(null);
 		
-		JButton btnVolver1 = new JButton("");
+		btnVolver1 = new JButton("");
 		btnVolver1.setIcon(new ImageIcon(Interfaz.class.getResource("/com/sun/javafx/scene/control/skin/caspian/fxvk-backspace-button.png")));
 		btnVolver1.setBounds(10, 11, 54, 35);
 		btnVolver1.addMouseListener(new MouseAdapter() {
@@ -533,6 +539,15 @@ public class Interfaz {
 		JButton btnListo = new JButton("LISTO!");
 		btnListo.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		btnListo.setBounds(202, 366, 190, 35);
+		btnListo.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				panelSeleccionPersonaje.setVisible(false);
+				panelJugar.setVisible(true);
+				limpiarCampos();
+				setDatosBatalla(choice.getSelectedItem(),choice2.getSelectedItem());
+			}
+		});
 		panelSeleccionPersonaje.add(btnListo);
 		
 		JSeparator separator_5 = new JSeparator();
@@ -540,9 +555,267 @@ public class Interfaz {
 		separator_5.setBounds(303, 11, 292, 344);
 		panelSeleccionPersonaje.add(separator_5);
 		
+		panelJugar = new JPanel();
+		frame.getContentPane().add(panelJugar, "name_525038074497575");
+		panelJugar.setLayout(null);
 		
+		JButton btnVolverBatalla = new JButton("");
+		btnVolverBatalla.setIcon(new ImageIcon(Interfaz.class.getResource("/com/sun/javafx/scene/control/skin/caspian/fxvk-backspace-button.png")));
+		btnVolverBatalla.setBounds(10, 11, 54, 35);
+		btnVolverBatalla.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				panelJugar.setVisible(false);
+				panelMenu.setVisible(true);
+				ctrl.clearPersonajes();
+			}
+		});
+		panelJugar.add(btnVolverBatalla);
 		
+		sliderBatallaV1 = new JSlider();
+		sliderBatallaV1.setToolTipText("");
+		sliderBatallaV1.setValue(0);
+		sliderBatallaV1.setMinorTickSpacing(1);
+		sliderBatallaV1.setMaximum(200);
+		sliderBatallaV1.setMajorTickSpacing(10);
+		sliderBatallaV1.setEnabled(false);
+		sliderBatallaV1.setBounds(10, 117, 244, 34);
+		panelJugar.add(sliderBatallaV1);
 		
+		labelBatallaEn1 = new JLabel("0");
+		labelBatallaEn1.setHorizontalAlignment(SwingConstants.CENTER);
+		labelBatallaEn1.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		labelBatallaEn1.setBounds(154, 194, 46, 34);
+		panelJugar.add(labelBatallaEn1);
+		
+		JLabel label_4 = new JLabel("Energia");
+		label_4.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
+		label_4.setBounds(225, 194, 57, 34);
+		panelJugar.add(label_4);
+		
+		sliderBatallaEn1 = new JSlider();
+		sliderBatallaEn1.setValue(0);
+		sliderBatallaEn1.setMaximum(200);
+		sliderBatallaEn1.setEnabled(false);
+		sliderBatallaEn1.setBounds(10, 194, 146, 34);
+		panelJugar.add(sliderBatallaEn1);
+		
+		labelBatallaD1 = new JLabel();
+		labelBatallaD1.setText("0");
+		labelBatallaD1.setHorizontalAlignment(SwingConstants.CENTER);
+		labelBatallaD1.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		labelBatallaD1.setBounds(154, 239, 46, 34);
+		panelJugar.add(labelBatallaD1);
+		
+		JLabel label_8 = new JLabel("Defensa");
+		label_8.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		label_8.setBounds(225, 239, 63, 34);
+		panelJugar.add(label_8);
+		
+		JLabel label_9 = new JLabel("Vida");
+		label_9.setHorizontalAlignment(SwingConstants.CENTER);
+		label_9.setFont(new Font("Lucida Sans", Font.ITALIC, 17));
+		label_9.setBounds(194, 152, 63, 27);
+		panelJugar.add(label_9);
+		
+		labelBatallaV1 = new JLabel("0");
+		labelBatallaV1.setHorizontalAlignment(SwingConstants.CENTER);
+		labelBatallaV1.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		labelBatallaV1.setBounds(247, 117, 46, 34);
+		panelJugar.add(labelBatallaV1);
+		
+		sliderBatallaD1 = new JSlider();
+		sliderBatallaD1.setValue(0);
+		sliderBatallaD1.setMaximum(20);
+		sliderBatallaD1.setEnabled(false);
+		sliderBatallaD1.setBounds(10, 239, 146, 34);
+		panelJugar.add(sliderBatallaD1);
+		
+		sliderBatallaEv1 = new JSlider();
+		sliderBatallaEv1.setValue(0);
+		sliderBatallaEv1.setMaximum(80);
+		sliderBatallaEv1.setEnabled(false);
+		sliderBatallaEv1.setBounds(10, 284, 146, 34);
+		panelJugar.add(sliderBatallaEv1);
+		
+		labelBatallaEv1 = new JLabel("0");
+		labelBatallaEv1.setHorizontalAlignment(SwingConstants.CENTER);
+		labelBatallaEv1.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		labelBatallaEv1.setBounds(154, 284, 46, 34);
+		panelJugar.add(labelBatallaEv1);
+		
+		JLabel label_13 = new JLabel("Evasi\u00F3n");
+		label_13.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
+		label_13.setBounds(223, 284, 59, 34);
+		panelJugar.add(label_13);
+		
+		sliderBatallaV2 = new JSlider();
+		sliderBatallaV2.setValue(0);
+		sliderBatallaV2.setMinorTickSpacing(1);
+		sliderBatallaV2.setMaximum(200);
+		sliderBatallaV2.setMajorTickSpacing(10);
+		sliderBatallaV2.setEnabled(false);
+		sliderBatallaV2.setBounds(340, 117, 244, 34);
+		panelJugar.add(sliderBatallaV2);
+		
+		labelBatallaEn2 = new JLabel("0");
+		labelBatallaEn2.setHorizontalAlignment(SwingConstants.CENTER);
+		labelBatallaEn2.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		labelBatallaEn2.setBounds(496, 194, 46, 34);
+		panelJugar.add(labelBatallaEn2);
+		
+		JLabel label_15 = new JLabel("Energia");
+		label_15.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
+		label_15.setBounds(564, 194, 57, 34);
+		panelJugar.add(label_15);
+		
+		JLabel label_16 = new JLabel("Defensa");
+		label_16.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		label_16.setBounds(564, 239, 63, 34);
+		panelJugar.add(label_16);
+		
+		labelBatallaV2 = new JLabel();
+		labelBatallaV2.setText("0");
+		labelBatallaV2.setHorizontalAlignment(SwingConstants.CENTER);
+		labelBatallaV2.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		labelBatallaV2.setBounds(594, 117, 46, 34);
+		panelJugar.add(labelBatallaV2);
+		
+		 sliderBatallaEn2 = new JSlider();
+		sliderBatallaEn2.setValue(0);
+		sliderBatallaEn2.setMaximum(200);
+		sliderBatallaEn2.setEnabled(false);
+		sliderBatallaEn2.setBounds(340, 194, 146, 34);
+		panelJugar.add(sliderBatallaEn2);
+		
+		 sliderBatallaD2 = new JSlider();
+		sliderBatallaD2.setValue(0);
+		sliderBatallaD2.setMaximum(20);
+		sliderBatallaD2.setEnabled(false);
+		sliderBatallaD2.setBounds(340, 239, 146, 34);
+		panelJugar.add(sliderBatallaD2);
+		
+		labelBatallaD2 = new JLabel("0");
+		labelBatallaD2.setHorizontalAlignment(SwingConstants.CENTER);
+		labelBatallaD2.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		labelBatallaD2.setBounds(496, 239, 46, 34);
+		panelJugar.add(labelBatallaD2);
+		
+		 labelBatallaEv2 = new JLabel("0");
+		labelBatallaEv2.setHorizontalAlignment(SwingConstants.CENTER);
+		labelBatallaEv2.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		labelBatallaEv2.setBounds(496, 284, 46, 34);
+		panelJugar.add(labelBatallaEv2);
+		
+		 sliderBatallaEv2 = new JSlider();
+		sliderBatallaEv2.setValue(0);
+		sliderBatallaEv2.setMaximum(80);
+		sliderBatallaEv2.setEnabled(false);
+		sliderBatallaEv2.setBounds(340, 284, 146, 34);
+		panelJugar.add(sliderBatallaEv2);
+		
+		JLabel label_21 = new JLabel("Evasi\u00F3n");
+		label_21.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
+		label_21.setBounds(570, 284, 59, 34);
+		panelJugar.add(label_21);
+		
+		JLabel label_22 = new JLabel("JUGADOR 1");
+		label_22.setFont(new Font("Lucida Sans", Font.BOLD | Font.ITALIC, 24));
+		label_22.setBounds(92, 11, 146, 35);
+		panelJugar.add(label_22);
+		
+		JLabel label_23 = new JLabel("JUGADOR 2");
+		label_23.setFont(new Font("Lucida Sans", Font.BOLD | Font.ITALIC, 24));
+		label_23.setBounds(422, 11, 146, 35);
+		panelJugar.add(label_23);
+		
+		lblNombrePersonaje1 = new JLabel("New label");
+		lblNombrePersonaje1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNombrePersonaje1.setFont(new Font("Lucida Sans", Font.BOLD, 16));
+		lblNombrePersonaje1.setBounds(117, 44, 94, 35);
+		panelJugar.add(lblNombrePersonaje1);
+		
+		lblNombrePersonaje2 = new JLabel("New label");
+		lblNombrePersonaje2.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNombrePersonaje2.setFont(new Font("Lucida Sans", Font.BOLD, 16));
+		lblNombrePersonaje2.setBounds(446, 44, 94, 35);
+		panelJugar.add(lblNombrePersonaje2);
+		
+		JLabel lblNewLabel_3 = new JLabel("Turno:");
+		lblNewLabel_3.setFont(new Font("Lucida Sans", Font.PLAIN, 18));
+		lblNewLabel_3.setBounds(10, 345, 87, 35);
+		panelJugar.add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_4 = new JLabel("Energia ataque:");
+		lblNewLabel_4.setFont(new Font("Lucida Sans", Font.PLAIN, 18));
+		lblNewLabel_4.setBounds(10, 396, 146, 35);
+		panelJugar.add(lblNewLabel_4);
+		
+		btnDefender = new JButton("DEFENDER");
+		btnDefender.setBounds(401, 345, 125, 35);
+		panelJugar.add(btnDefender);
+		
+		btnAtacar = new JButton("ATACAR");
+		btnAtacar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				ctrl.atacar(sliderEnergiaAtaque.getValue());
+				refreshDatosBatalla(ctrl.getP1(), ctrl.getP2());
+				
+			}
+		});
+		btnAtacar.setBounds(401, 396, 125, 35);
+		
+	panelJugar.add(btnAtacar);
+		
+		sliderEnergiaAtaque = new JSlider();
+		sliderEnergiaAtaque.setMaximum(200);
+		sliderEnergiaAtaque.setValue(0);
+		sliderEnergiaAtaque.setBounds(164, 396, 200, 35);
+		sliderEnergiaAtaque.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent event) {
+                int current = ((JSlider)event.getSource()).getValue();
+                lblEnergiaAtaque.setText(String.valueOf(current));
+                
+            }
+        });
+		
+		panelJugar.add(sliderEnergiaAtaque);
+		
+		labelTurno = new JLabel("");
+		labelTurno.setFont(new Font("Lucida Sans", Font.BOLD | Font.ITALIC, 18));
+		labelTurno.setBounds(92, 345, 156, 35);
+		panelJugar.add(labelTurno);
+		
+		lblEnergiaAtaque = new JLabel("0");
+		lblEnergiaAtaque.setHorizontalAlignment(SwingConstants.CENTER);
+		lblEnergiaAtaque.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblEnergiaAtaque.setBounds(351, 397, 46, 34);
+		panelJugar.add(lblEnergiaAtaque);
+		
+		JLabel label = new JLabel("Vida");
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setFont(new Font("Lucida Sans", Font.ITALIC, 17));
+		label.setBounds(521, 152, 63, 27);
+		panelJugar.add(label);
+		
+		JSeparator separator_6 = new JSeparator();
+		separator_6.setOrientation(SwingConstants.VERTICAL);
+		separator_6.setBounds(303, 11, 292, 307);
+		panelJugar.add(separator_6);
+		
+		JSeparator separator_7 = new JSeparator();
+		separator_7.setBounds(-1, 381, 647, 50);
+		panelJugar.add(separator_7);
+		
+		separator_8 = new JSeparator();
+		separator_8.setBounds(-1, 177, 647, 157);
+		panelJugar.add(separator_8);
+		
+		separator_9 = new JSeparator();
+		separator_9.setBounds(10, 110, 630, 73);
+		panelJugar.add(separator_9);
+			
 		
 		
 		btnVolver.addMouseListener(new MouseAdapter() {
@@ -584,6 +857,73 @@ public class Interfaz {
 				eliminar();
 			}
 		});
+	}
+	
+	private void refreshDatosBatalla(Personaje p1, Personaje p2){
+		
+		lblNombrePersonaje1.setText(p1.getNombre().toUpperCase());
+		labelBatallaD1.setText(String.valueOf(p1.getDefensa()));
+		labelBatallaEn1.setText(String.valueOf(p1.getEnergia()));
+		labelBatallaV1.setText(String.valueOf(p1.getAtaque()));		
+		labelBatallaEv1.setText(String.valueOf(p1.getEvasion()));
+		sliderBatallaV1.setValue(p1.getAtaque());
+		sliderBatallaD1.setValue(p1.getDefensa());
+		sliderBatallaEn1.setValue((int) p1.getEnergia());
+		sliderBatallaEv1.setValue(p1.getEvasion());	
+		
+		
+	
+		lblNombrePersonaje2.setText(p2.getNombre().toUpperCase());
+		labelBatallaD2.setText(String.valueOf(p2.getDefensa()));
+		labelBatallaEn2.setText(String.valueOf(p2.getEnergia()));
+		labelBatallaV2.setText(String.valueOf(p2.getAtaque()));
+		labelBatallaEv2.setText(String.valueOf(p2.getEvasion()));
+		sliderBatallaV2.setValue(p2.getAtaque());
+		sliderBatallaD2.setValue(p2.getDefensa());
+		sliderBatallaEn2.setValue((int) p2.getEnergia());
+		sliderBatallaEv2.setValue(p2.getEvasion());		
+		ctrl.setPersonajes(p1,p2);
+		turno= ctrl.getTurno();
+		labelTurno.setText(turno.getNombre().toUpperCase());
+		sliderEnergiaAtaque.setValue(0);
+		sliderEnergiaAtaque.setMaximum((int) turno.getEnergia());
+		
+	}
+	
+	private void setDatosBatalla(String nom1, String nom2){
+		Personaje p1 = new Personaje();
+		p1 = ctrl.getPersonajeByNom(nom1);
+		lblNombrePersonaje1.setText(p1.getNombre().toUpperCase());
+		labelBatallaD1.setText(String.valueOf(p1.getDefensa()));
+		labelBatallaEn1.setText(String.valueOf(p1.getEnergia()));
+		labelBatallaV1.setText(String.valueOf(p1.getAtaque()));		
+		labelBatallaEv1.setText(String.valueOf(p1.getEvasion()));
+		sliderBatallaV1.setMaximum(p1.getAtaque());
+		sliderBatallaV1.setValue(p1.getAtaque());
+		sliderBatallaD1.setValue(p1.getDefensa());
+		sliderBatallaEn1.setMaximum((int) p1.getEnergia());
+		sliderBatallaEn1.setValue((int) p1.getEnergia());
+		sliderBatallaEv1.setValue(p1.getEvasion());	
+		
+		Personaje p2 = new Personaje();
+		p2 = ctrl.getPersonajeByNom(nom2);
+		lblNombrePersonaje2.setText(p2.getNombre().toUpperCase());
+		labelBatallaD2.setText(String.valueOf(p2.getDefensa()));
+		labelBatallaEn2.setText(String.valueOf(p2.getEnergia()));
+		labelBatallaV2.setText(String.valueOf(p2.getAtaque()));
+		labelBatallaEv2.setText(String.valueOf(p2.getEvasion()));
+		sliderBatallaV2.setMaximum(p2.getAtaque());
+		sliderBatallaV2.setValue(p2.getAtaque());
+		sliderBatallaD2.setValue(p2.getDefensa());
+		sliderBatallaEn2.setMaximum((int) p2.getEnergia());
+		sliderBatallaEn2.setValue((int) p2.getEnergia());
+		sliderBatallaEv2.setValue(p2.getEvasion());		
+		ctrl.setPersonajes(p1,p2);
+		turno= ctrl.getTurno();
+		labelTurno.setText(turno.getNombre().toUpperCase());
+		sliderEnergiaAtaque.setMaximum((int) turno.getEnergia());
+		
+		
 	}
 	
 	private void limpiarPlayer(Choice c){
@@ -812,6 +1152,7 @@ public class Interfaz {
 			
 		return valido;
 	}
+
 	
 	private void notifyUser(String mensaje) {
 		JOptionPane.showMessageDialog(this.frame, mensaje);		
