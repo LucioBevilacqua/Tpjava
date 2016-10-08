@@ -1,14 +1,15 @@
 package ui;
 
 import ctrl.*;
-import data.DataPersonaje;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
@@ -30,6 +31,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
+import java.awt.Choice;
+import java.awt.SystemColor;;
 	
 public class Interfaz {
 
@@ -44,9 +47,13 @@ public class Interfaz {
 	private JLabel txtDefensa, txtAtaque, txtEvasion;
 	private JSlider sliderDefensa, sliderEnergia, sliderEvasion, sliderAtaque;
 	private int total = 200;
+	private Choice choice;
+	private Choice choice2;
+	private JSlider sliderA1,sliderEv1,sliderE1,sliderD1, sliderEv2,sliderE2,sliderD2,sliderA2;
 	
 	
 	private ABMCPersonaje ctrl;
+	private JLabel labelD1,labelA1,labelEv1,labelEv2,labelEn1,labelEn2,labelD2,labelA2;
 
 	/**
 	 * Launch the application.
@@ -78,21 +85,23 @@ public class Interfaz {
 	private void initialize() {
 		cc = new CardLayout();
 		frame = new JFrame();
-		frame.setBounds(100, 100, 621, 410);
+		frame.setBounds(100, 100, 669, 480);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(cc);
 		
 		panelMenu = new JPanel();
+		panelMenu.setBackground(SystemColor.activeCaption);
 		frame.getContentPane().add(panelMenu, "panelMenu");
-		panelMenu.setLayout(null);
 		
 		panelCreacion = new JPanel();
 		frame.getContentPane().add(panelCreacion, "panelCreacion");
 		panelCreacion.setLayout(null);
+		panelMenu.setLayout(null);
 		
 		
 		JButton btbIniciarCreacion = new JButton("Administrar personajes");
-		btbIniciarCreacion.setBounds(173, 71, 226, 23);
+		btbIniciarCreacion.setBounds(134, 102, 384, 49);
+		btbIniciarCreacion.setFont(new Font("Lucida Sans", Font.BOLD | Font.ITALIC, 22));
 		panelMenu.add(btbIniciarCreacion);			
 		btbIniciarCreacion.addMouseListener(new MouseAdapter() {
 			@Override
@@ -105,13 +114,15 @@ public class Interfaz {
 		});
 		
 		JButton btnJugar = new JButton("JUGAR");
-		btnJugar.setBounds(173, 37, 226, 23);
+		btnJugar.setBounds(134, 37, 384, 49);
+		btnJugar.setFont(new Font("Lucida Sans", Font.BOLD | Font.ITALIC, 22));
 		btnJugar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				iniciarCreacion();
 				panelMenu.setVisible(false);
 				panelSeleccionPersonaje.setVisible(true);
+				cargarNombres();
 
 			}
 		});
@@ -123,23 +134,24 @@ public class Interfaz {
 		
 		JButton btnEliminar = new JButton("Eliminar");
 		btnEliminar.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
-		btnEliminar.setBounds(422, 312, 121, 23);
+		btnEliminar.setBounds(426, 337, 121, 34);
 		panelCreacion.add(btnEliminar);
 		btnEliminar.setForeground(Color.RED);
 		
 		JButton btnCrear = new JButton("Crear");
 		btnCrear.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
-		btnCrear.setBounds(60, 312, 121, 23);
+		btnCrear.setBounds(63, 337, 121, 34);
 		panelCreacion.add(btnCrear);
 		
 		
 		JButton btnModificar = new JButton("Modificar");
 		btnModificar.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
-		btnModificar.setBounds(242, 312, 121, 23);
+		btnModificar.setBounds(242, 337, 121, 34);
 		panelCreacion.add(btnModificar);
 		
 		JButton btnBuscar = new JButton("Buscar");
-		btnBuscar.setBounds(458, 15, 108, 20);
+		btnBuscar.setFont(new Font("Lucida Sans", Font.PLAIN, 17));
+		btnBuscar.setBounds(520, 11, 108, 26);
 		panelCreacion.add(btnBuscar);
 		
 		txtNombre = new JTextField();
@@ -157,7 +169,7 @@ public class Interfaz {
 		panelCreacion.add(lblEvasion);
 		lblEvasion.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
 		
-		JLabel lblAtaque = new JLabel("Ataque");
+		JLabel lblAtaque = new JLabel("Vida");
 		lblAtaque.setBounds(339, 188, 63, 27);
 		panelCreacion.add(lblAtaque);
 		lblAtaque.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
@@ -178,13 +190,13 @@ public class Interfaz {
 		lblNombre.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
 		
 		JLabel lblId = new JLabel("ID");
-		lblId.setBounds(331, 15, 15, 19);
+		lblId.setBounds(355, 11, 28, 26);
 		panelCreacion.add(lblId);
-		lblId.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
+		lblId.setFont(new Font("Lucida Sans", Font.PLAIN, 18));
 		
 		txtId = new JTextField();
 		txtId.setToolTipText("");
-		txtId.setBounds(356, 16, 92, 20);
+		txtId.setBounds(393, 11, 117, 26);
 		panelCreacion.add(txtId);
 		txtId.setColumns(10);
 		
@@ -237,7 +249,7 @@ public class Interfaz {
             public void stateChanged(ChangeEvent event) {
                 int current = ((JSlider)event.getSource()).getValue();
                 txtDefensa.setText(String.valueOf(current));
-                txtTotal.setText(String.valueOf(total-Integer.parseInt(txtAtaque.getText())-Integer.parseInt(txtEvasion.getText())-Integer.parseInt(txtEnergia.getText())-current));
+                txtTotal.setText(String.valueOf(total-Integer.parseInt(txtAtaque.getText())-Integer.parseInt(txtEvasion.getText())-(int)Float.parseFloat(txtEnergia.getText())-current));
 
             }
         });
@@ -308,11 +320,6 @@ public class Interfaz {
 		frame.getContentPane().add(panelSeleccionPersonaje, "name_491738062685251");
 		panelSeleccionPersonaje.setLayout(null);
 		
-		JSeparator separator_5 = new JSeparator();
-		separator_5.setOrientation(SwingConstants.VERTICAL);
-		separator_5.setBounds(303, 11, 292, 355);
-		panelSeleccionPersonaje.add(separator_5);
-		
 		JButton btnVolver1 = new JButton("");
 		btnVolver1.setIcon(new ImageIcon(Interfaz.class.getResource("/com/sun/javafx/scene/control/skin/caspian/fxvk-backspace-button.png")));
 		btnVolver1.setBounds(10, 11, 54, 35);
@@ -325,6 +332,219 @@ public class Interfaz {
 			}
 		});
 		panelSeleccionPersonaje.add(btnVolver1);
+		
+		
+		
+		
+		choice = new Choice();
+		
+		choice.setForeground(Color.BLACK);
+		choice.setFont(new Font("Lucida Sans", Font.BOLD | Font.ITALIC, 16));
+		choice.setBounds(25, 62, 266, 20);
+		choice.addItemListener(new ItemListener(){
+	        public void itemStateChanged(ItemEvent ie)
+	        {
+	        if(!choice.getSelectedItem().equals("Seleccionar...")){
+	        	setDatosPlayer1(choice.getSelectedItem());
+	        }else{
+	        	limpiarPlayer(choice);
+	        }
+	        }
+	    });
+		panelSeleccionPersonaje.add(choice);
+		
+		
+		choice2 = new Choice();
+		choice2.setForeground(Color.BLACK);
+		choice2.setFont(new Font("Lucida Sans", Font.BOLD | Font.ITALIC, 16));
+		choice2.setBounds(361, 62, 266, 26);
+		choice2.addItemListener(new ItemListener(){
+	        public void itemStateChanged(ItemEvent ie)
+	        {
+	        if(!choice2.getSelectedItem().equals("Seleccionar...")){
+	        	setDatosPlayer2(choice2.getSelectedItem());
+	        }else{
+	        	limpiarPlayer(choice2);
+	        }
+	        }
+	    });
+		panelSeleccionPersonaje.add(choice2);
+		
+		sliderE1 = new JSlider();
+		sliderE1.setEnabled(false);
+		sliderE1.setValue(0);
+		sliderE1.setMinorTickSpacing(1);
+		sliderE1.setMaximum(200);
+		sliderE1.setMajorTickSpacing(10);
+		sliderE1.setBounds(10, 129, 146, 34);
+		panelSeleccionPersonaje.add(sliderE1);
+		
+		 labelEn1 = new JLabel("0");
+		labelEn1.setHorizontalAlignment(SwingConstants.CENTER);
+		labelEn1.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		labelEn1.setBounds(154, 126, 46, 34);
+		panelSeleccionPersonaje.add(labelEn1);
+		
+		JLabel label_1 = new JLabel("Energia");
+		label_1.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
+		label_1.setBounds(234, 126, 57, 34);
+		panelSeleccionPersonaje.add(label_1);
+		
+		sliderD1 = new JSlider();
+		sliderD1.setEnabled(false);
+		sliderD1.setValue(0);
+		sliderD1.setMaximum(20);
+		sliderD1.setBounds(10, 178, 146, 34);
+		panelSeleccionPersonaje.add(sliderD1);
+		
+		labelD1 = new JLabel();
+		labelD1.setText("0");
+		labelD1.setHorizontalAlignment(SwingConstants.CENTER);
+		labelD1.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		labelD1.setBounds(154, 178, 46, 34);
+		panelSeleccionPersonaje.add(labelD1);
+		
+		JLabel label_3 = new JLabel("Defensa");
+		label_3.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		label_3.setBounds(234, 178, 63, 34);
+		panelSeleccionPersonaje.add(label_3);
+		
+		JLabel lblVida = new JLabel("Vida");
+		lblVida.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
+		lblVida.setBounds(234, 220, 63, 34);
+		panelSeleccionPersonaje.add(lblVida);
+		
+		labelA1 = new JLabel("0");
+		labelA1.setHorizontalAlignment(SwingConstants.CENTER);
+		labelA1.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		labelA1.setBounds(154, 220, 46, 34);
+		panelSeleccionPersonaje.add(labelA1);
+		
+		sliderA1 = new JSlider();
+		sliderA1.setEnabled(false);
+		sliderA1.setValue(0);
+		sliderA1.setMaximum(200);
+		sliderA1.setBounds(10, 220, 146, 34);
+		panelSeleccionPersonaje.add(sliderA1);
+		
+		sliderEv1 = new JSlider();
+		sliderEv1.setEnabled(false);
+		sliderEv1.setValue(0);
+		sliderEv1.setMaximum(80);
+		sliderEv1.setBounds(10, 267, 146, 34);
+		panelSeleccionPersonaje.add(sliderEv1);
+		
+		labelEv1 = new JLabel("0");
+		labelEv1.setHorizontalAlignment(SwingConstants.CENTER);
+		labelEv1.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		labelEv1.setBounds(154, 267, 46, 34);
+		panelSeleccionPersonaje.add(labelEv1);
+		
+		JLabel label_7 = new JLabel("Evasi\u00F3n");
+		label_7.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
+		label_7.setBounds(234, 267, 59, 34);
+		panelSeleccionPersonaje.add(label_7);
+		
+		sliderE2 = new JSlider();
+		sliderE2.setValue(0);
+		sliderE2.setMinorTickSpacing(1);
+		sliderE2.setMaximum(200);
+		sliderE2.setMajorTickSpacing(10);
+		sliderE2.setEnabled(false);
+		sliderE2.setBounds(340, 129, 146, 34);
+		panelSeleccionPersonaje.add(sliderE2);
+		
+		labelEn2 = new JLabel("0");
+		labelEn2.setHorizontalAlignment(SwingConstants.CENTER);
+		labelEn2.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		labelEn2.setBounds(496, 129, 46, 34);
+		panelSeleccionPersonaje.add(labelEn2);
+		
+		JLabel label_2 = new JLabel("Energia");
+		label_2.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
+		label_2.setBounds(570, 126, 57, 34);
+		panelSeleccionPersonaje.add(label_2);
+		
+		JLabel label_5 = new JLabel("Defensa");
+		label_5.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		label_5.setBounds(564, 170, 63, 34);
+		panelSeleccionPersonaje.add(label_5);
+		
+		labelD2 = new JLabel();
+		labelD2.setText("0");
+		labelD2.setHorizontalAlignment(SwingConstants.CENTER);
+		labelD2.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		labelD2.setBounds(496, 170, 46, 34);
+		panelSeleccionPersonaje.add(labelD2);
+		
+		sliderD2 = new JSlider();
+		sliderD2.setValue(0);
+		sliderD2.setMaximum(20);
+		sliderD2.setEnabled(false);
+		sliderD2.setBounds(340, 170, 146, 34);
+		panelSeleccionPersonaje.add(sliderD2);
+		
+		sliderA2 = new JSlider();
+		sliderA2.setValue(0);
+		sliderA2.setMaximum(200);
+		sliderA2.setEnabled(false);
+		sliderA2.setBounds(340, 216, 146, 34);
+		panelSeleccionPersonaje.add(sliderA2);
+		
+		labelA2 = new JLabel("0");
+		labelA2.setHorizontalAlignment(SwingConstants.CENTER);
+		labelA2.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		labelA2.setBounds(496, 216, 46, 34);
+		panelSeleccionPersonaje.add(labelA2);
+		
+		JLabel lblVida_1 = new JLabel("Vida");
+		lblVida_1.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
+		lblVida_1.setBounds(564, 216, 63, 34);
+		panelSeleccionPersonaje.add(lblVida_1);
+		
+		labelEv2 = new JLabel("0");
+		labelEv2.setHorizontalAlignment(SwingConstants.CENTER);
+		labelEv2.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		labelEv2.setBounds(496, 267, 46, 34);
+		panelSeleccionPersonaje.add(labelEv2);
+		
+		sliderEv2 = new JSlider();
+		sliderEv2.setValue(0);
+		sliderEv2.setMaximum(80);
+		sliderEv2.setEnabled(false);
+		sliderEv2.setBounds(340, 267, 146, 34);
+		panelSeleccionPersonaje.add(sliderEv2);
+		
+		JLabel label_11 = new JLabel("Evasi\u00F3n");
+		label_11.setFont(new Font("Lucida Sans", Font.PLAIN, 15));
+		label_11.setBounds(568, 267, 59, 34);
+		panelSeleccionPersonaje.add(label_11);
+		
+		JLabel lblNewLabel = new JLabel("JUGADOR 1");
+		lblNewLabel.setFont(new Font("Lucida Sans", Font.BOLD | Font.ITALIC, 24));
+		lblNewLabel.setBounds(92, 11, 146, 35);
+		panelSeleccionPersonaje.add(lblNewLabel);
+		
+		JLabel lblJugador = new JLabel("JUGADOR 2");
+		lblJugador.setFont(new Font("Lucida Sans", Font.BOLD | Font.ITALIC, 24));
+		lblJugador.setBounds(422, 11, 146, 35);
+		panelSeleccionPersonaje.add(lblJugador);
+		
+		JButton btnListo = new JButton("LISTO!");
+		btnListo.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		btnListo.setBounds(202, 366, 190, 35);
+		panelSeleccionPersonaje.add(btnListo);
+		
+		JSeparator separator_5 = new JSeparator();
+		separator_5.setOrientation(SwingConstants.VERTICAL);
+		separator_5.setBounds(303, 11, 292, 344);
+		panelSeleccionPersonaje.add(separator_5);
+		
+		
+		
+		
+		
+		
 		btnVolver.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -366,6 +586,82 @@ public class Interfaz {
 		});
 	}
 	
+	private void limpiarPlayer(Choice c){
+		if(c.equals(choice)){
+			labelD1.setText(String.valueOf(0));
+			labelEn1.setText(String.valueOf(0));
+			labelA1.setText(String.valueOf(0));
+			labelEv1.setText(String.valueOf(0));
+			sliderA1.setValue(0);
+			sliderD1.setValue(0);
+			sliderE1.setValue(0);
+			sliderEv1.setValue(0);		
+		}else{
+			labelD2.setText(String.valueOf(0));
+			labelEn2.setText(String.valueOf(0));
+			labelA2.setText(String.valueOf(0));
+			labelEv2.setText(String.valueOf(0));
+			sliderA2.setValue(0);
+			sliderD2.setValue(0);
+			sliderE2.setValue(0);
+			sliderEv2.setValue(0);		
+		}
+	}
+	
+	private void setDatosPlayer1(String nom){
+		Personaje p = new Personaje();
+		p = ctrl.getPersonajeByNom(nom);
+		labelD1.setText(String.valueOf(p.getDefensa()));
+		labelEn1.setText(String.valueOf(p.getEnergia()));
+		labelA1.setText(String.valueOf(p.getAtaque()));
+		labelEv1.setText(String.valueOf(p.getEvasion()));
+		sliderA1.setValue(p.getAtaque());
+		sliderD1.setValue(p.getDefensa());
+		sliderE1.setValue((int) p.getEnergia());
+		sliderEv1.setValue(p.getEvasion());		
+		
+	}
+	
+	private void setDatosPlayer2(String nom){
+		Personaje p = new Personaje();
+		p = ctrl.getPersonajeByNom(nom);
+		labelD2.setText(String.valueOf(p.getDefensa()));
+		labelEn2.setText(String.valueOf(p.getEnergia()));
+		labelA2.setText(String.valueOf(p.getAtaque()));
+		labelEv2.setText(String.valueOf(p.getEvasion()));
+		sliderA2.setValue(p.getAtaque());
+		sliderD2.setValue(p.getDefensa());
+		sliderE2.setValue((int) p.getEnergia());
+		sliderEv2.setValue(p.getEvasion());		
+		
+	}
+	
+	private void cargarNombres(){
+		ArrayList<String> nombres = new ArrayList<String>();
+		
+		
+		choice.removeAll();
+		choice2.removeAll();
+		choice.add("Seleccionar...");
+		choice2.add("Seleccionar...");
+		nombres = ctrl.cargarNombres();
+		for(String nom: nombres){
+			
+			/*for (int i =0; i<choice.getItemCount(); i++) {
+		        if (choice.getItem(i).equals(nom)) {
+		        	existe=true;
+		        	break;
+		        }else{
+		        	existe=false;
+		        }
+		    }
+			if(!existe)*/
+			
+        choice.add(nom.toUpperCase());
+        choice2.add(nom.toUpperCase());
+
+		}
+	}
 	
 	
 	
@@ -377,9 +673,11 @@ public class Interfaz {
 
 	protected void modificar() {
 		try {
-			ctrl.update(MapearDeFormularioConId());
-			notifyUser("Personaje: " + txtNombre.getText() + " modificado con éxito!");
-			limpiarCampos();
+			if(datosValidos()){
+				ctrl.update(MapearDeFormularioConId());
+				notifyUser("Personaje: " + txtNombre.getText() + " modificado con éxito!");
+				limpiarCampos();
+			}
 		} catch (ArithmeticException are){
 			notifyUser("Ha ocurrido algo inesperado, consulte al administrador de sistemas.", are, Level.ERROR);
 		} catch (Exception e){
@@ -388,7 +686,7 @@ public class Interfaz {
 	}
 
 	private Personaje MapearDeFormularioConId() {
-		// TODO Auto-generated method stub
+		
 		Personaje p = new Personaje();
 		p.setId(Integer.parseInt(txtId.getText()));
 		p.setNombre(txtNombre.getText());
@@ -411,7 +709,7 @@ public class Interfaz {
 	protected void agregar() {
 		if(datosValidos()){
 			Personaje p=MapearDeFormulario();
-			if(DataPersonaje.verificarNombre(p)){
+			if(ctrl.verficarNombre(p)){
 			ctrl.add(p);
 			notifyUser(txtNombre.getText() + " creado con éxito");
 			MapearAFormulario(p);
@@ -442,7 +740,9 @@ public class Interfaz {
 		if(idValido()){
 		Personaje p = ctrl.getPersonaje(MapearDeFormularioId());
 		if(p!=null){
+			//total = (int) (p.getAtaque()+p.getDefensa()+p.getEnergia()+p.getEvasion()+p.getPuntosTotales());
 			MapearAFormulario(p);
+			
 		}else{
 			notifyUser("Personaje con id: "+txtId.getText() + " no encontrado");
 		}
@@ -464,7 +764,7 @@ public class Interfaz {
 	}
 
 	private Personaje MapearDeFormularioId() {
-		// TODO Auto-generated method stub
+		
 		Personaje p = new Personaje();
 		p.setId(Integer.parseInt(txtId.getText()));
 		return p;
@@ -499,7 +799,7 @@ public class Interfaz {
 	}
 	
 	public boolean datosValidos(){
-		boolean valido=true;
+		boolean valido=true;	
 		if(txtAtaque.getText().trim().length()==0
 			|| txtNombre.getText().trim().length()==0
 			|| txtDefensa.getText().trim().length()==0

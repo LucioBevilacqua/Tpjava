@@ -1,5 +1,7 @@
 package ctrl;
 
+import java.util.ArrayList;
+
 import data.DataPersonaje;
 import entidades.Personaje;
 
@@ -32,4 +34,18 @@ public class ABMCPersonaje {
 		return dataPer.getById(p);
 	}
 
+	
+	public boolean verficarNombre(Personaje p){
+		return dataPer.verificarNombre(p);
+	}
+	
+	public ArrayList<String> cargarNombres(){
+		return dataPer.getPersonajes();
+	}
+
+
+	public Personaje getPersonajeByNom(String nom) {
+		// TODO Auto-generated method stub
+		return dataPer.getByNom(nom);
+	}
 }

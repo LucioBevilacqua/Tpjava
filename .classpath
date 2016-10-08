@@ -8,5 +8,7 @@
 	<classpathentry kind="lib" path="E:/Java/TpJava/mysql-connector-java-5.1.39/mysql-connector-java-5.1.39-bin.jar"/>
 	<classpathentry kind="lib" path="E:/Java/TpJava/apache-log4j-2.6.2-bin/log4j-api-2.6.2.jar"/>
 	<classpathentry kind="lib" path="E:/Java/TpJava/apache-log4j-2.6.2-bin/log4j-core-2.6.2.jar"/>
+	<classpathentry kind="lib" path="miglayout15-swing.jar" sourcepath="miglayout-src.zip"/>
+	<classpathentry kind="lib" path="E:/Lucio/miglayout-4.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

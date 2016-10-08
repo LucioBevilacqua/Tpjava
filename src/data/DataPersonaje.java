@@ -1,8 +1,7 @@
 package data;
 
 import java.sql.*;
-
-
+import java.util.ArrayList;
 
 import entidades.*;
 import utils.ApplicationException;
@@ -14,7 +13,7 @@ public class DataPersonaje {
 		
 	}
 	
-	public static boolean verificarNombre(Personaje per){
+	public boolean verificarNombre(Personaje per){
 		boolean valido=true;
 		
 		PreparedStatement stmt=null;
@@ -171,6 +170,51 @@ public class DataPersonaje {
 		
 	}
 	
+	
+	
+	public ArrayList<String> getPersonajes(){
+
+		ArrayList<String> nombres = new ArrayList<String>();
+		
+		
+		PreparedStatement stmt=null;
+		ResultSet rs=null;
+		try {
+			stmt = FactoryConexion.getInstancia().getConn().prepareStatement(
+					"select nombre"
+					+ " from personajes");
+			rs= stmt.executeQuery();
+			
+			while(rs!=null && rs.next()){
+				nombres.add(rs.getString("nombre"));				
+				
+				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				if(rs!=null)rs.close();
+				if(stmt!=null)stmt.close();
+				FactoryConexion.getInstancia().releaseConn();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ApplicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return nombres;
+	}
+	
+	
 	public Personaje getById(Personaje per){
 		Personaje p=null;
 		
@@ -183,6 +227,53 @@ public class DataPersonaje {
 					+ "from personajes"
 					+ " where id=?");
 			stmt.setInt(1, per.getId());
+			rs= stmt.executeQuery();
+			if(rs!=null && rs.next()){
+				p=new Personaje();
+				p.setId(rs.getInt("id"));
+				p.setNombre(rs.getString("nombre"));
+				p.setEnergia(rs.getFloat("energia"));
+				p.setDefensa(rs.getInt("defensa"));
+				p.setAtaque(rs.getInt("ataque"));
+				p.setEvasion(rs.getInt("evasion"));
+				p.setPuntosTotales(rs.getInt("puntosTotales"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				if(rs!=null)rs.close();
+				if(stmt!=null)stmt.close();
+				FactoryConexion.getInstancia().releaseConn();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ApplicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return p;
+	}
+	
+	public Personaje getByNom(String nom){
+		Personaje p=null;
+		
+		
+		PreparedStatement stmt=null;
+		ResultSet rs=null;
+		try {
+			stmt = FactoryConexion.getInstancia().getConn().prepareStatement(
+					"select id, nombre, energia, defensa, ataque, evasion, puntosTotales "
+					+ "from personajes"
+					+ " where nombre=?");
+			stmt.setString(1, nom);
 			rs= stmt.executeQuery();
 			if(rs!=null && rs.next()){
 				p=new Personaje();
