@@ -27,6 +27,11 @@ public class Personaje {
 	public Personaje(){
 		
 	}
+	
+	public void recibirAtaque(int energiaAtaque){
+		
+		ataque= ataque - energiaAtaque;
+	}
 
 	public int getId() {
 		return id;

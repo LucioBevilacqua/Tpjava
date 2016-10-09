@@ -579,6 +579,7 @@ public class Interfaz {
 		sliderBatallaV1.setMaximum(200);
 		sliderBatallaV1.setMajorTickSpacing(10);
 		sliderBatallaV1.setEnabled(false);
+		
 		sliderBatallaV1.setBounds(10, 117, 244, 34);
 		panelJugar.add(sliderBatallaV1);
 		
@@ -655,6 +656,7 @@ public class Interfaz {
 		sliderBatallaV2.setMaximum(200);
 		sliderBatallaV2.setMajorTickSpacing(10);
 		sliderBatallaV2.setEnabled(false);
+		
 		sliderBatallaV2.setBounds(340, 117, 244, 34);
 		panelJugar.add(sliderBatallaV2);
 		
@@ -752,6 +754,14 @@ public class Interfaz {
 		panelJugar.add(lblNewLabel_4);
 		
 		btnDefender = new JButton("DEFENDER");
+		btnDefender.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				ctrl.defender();
+				refreshDatosBatalla(ctrl.getP1(), ctrl.getP2());
+				
+			}
+		});
 		btnDefender.setBounds(401, 345, 125, 35);
 		panelJugar.add(btnDefender);
 		
@@ -766,7 +776,7 @@ public class Interfaz {
 		});
 		btnAtacar.setBounds(401, 396, 125, 35);
 		
-	panelJugar.add(btnAtacar);
+		panelJugar.add(btnAtacar);
 		
 		sliderEnergiaAtaque = new JSlider();
 		sliderEnergiaAtaque.setMaximum(200);
@@ -882,11 +892,25 @@ public class Interfaz {
 		sliderBatallaD2.setValue(p2.getDefensa());
 		sliderBatallaEn2.setValue((int) p2.getEnergia());
 		sliderBatallaEv2.setValue(p2.getEvasion());		
-		ctrl.setPersonajes(p1,p2);
 		turno= ctrl.getTurno();
 		labelTurno.setText(turno.getNombre().toUpperCase());
 		sliderEnergiaAtaque.setValue(0);
 		sliderEnergiaAtaque.setMaximum((int) turno.getEnergia());
+		
+		if(p1.getAtaque()<=0||p2.getAtaque()<=0){
+			if(p1.getAtaque()<=0){
+				notifyUser("FIN DEL JUEGO " + p2.getNombre() + " es el ganador \n Se acreditaron 10 puntos para gastar");
+				ctrl.acreditarPuntos(p2);
+				
+				panelJugar.setVisible(false);
+				panelMenu.setVisible(true);
+			}else{
+				notifyUser("FIN DEL JUEGO\n " + p1.getNombre() + " es el ganador \n Se acreditaron 10 puntos para gastar");
+				ctrl.acreditarPuntos(p1);
+				panelJugar.setVisible(false);
+				panelMenu.setVisible(true);
+			}
+		}
 		
 	}
 	
@@ -918,10 +942,13 @@ public class Interfaz {
 		sliderBatallaEn2.setMaximum((int) p2.getEnergia());
 		sliderBatallaEn2.setValue((int) p2.getEnergia());
 		sliderBatallaEv2.setValue(p2.getEvasion());		
+		
 		ctrl.setPersonajes(p1,p2);
 		turno= ctrl.getTurno();
 		labelTurno.setText(turno.getNombre().toUpperCase());
 		sliderEnergiaAtaque.setMaximum((int) turno.getEnergia());
+		
+		
 		
 		
 	}

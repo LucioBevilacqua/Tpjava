@@ -141,6 +141,41 @@ public class DataPersonaje {
 		}
 	}
 	
+	public void acreditarPuntos(Personaje p){
+		PreparedStatement stmt=null;
+		
+		try {
+			stmt= FactoryConexion.getInstancia().getConn().prepareStatement(
+					"update personajes set puntosTotales=?"+
+					" where id=?");
+			
+			
+			stmt.setInt(1, p.getPuntosTotales()+10);
+			stmt.setInt(2, p.getId());
+			stmt.execute();
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				if(stmt!=null)stmt.close();
+				FactoryConexion.getInstancia().releaseConn();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ApplicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public void delete(Personaje p){
 		PreparedStatement stmt=null;
 		

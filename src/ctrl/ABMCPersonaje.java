@@ -9,6 +9,8 @@ public class ABMCPersonaje {
 	
 	private DataPersonaje dataPer;
 	private Personaje p1,p2;
+	private int max1, max2;
+	private int vida1, vida2;
 	private Personaje turno;
 	
 	public ABMCPersonaje(){
@@ -50,15 +52,45 @@ public class ABMCPersonaje {
 		System.out.println(""+random);
 		if(turno.equals(p1)){
 			if( random> p2.getEvasion()){
-				p2.setAtaque(p2.getAtaque()-energiaAtaque);
+				p2.recibirAtaque(energiaAtaque);
 				p1.setEnergia(p1.getEnergia()-energiaAtaque);
-			}			
+			}else{
+				p1.setEnergia(p1.getEnergia()-energiaAtaque);
+			}
 		}else{
 			if(random > p1.getEvasion()){
-				p1.setAtaque(p1.getAtaque()-energiaAtaque);
+				p1.recibirAtaque(energiaAtaque);
+				p2.setEnergia(p2.getEnergia()-energiaAtaque);
+			}else{
 				p2.setEnergia(p2.getEnergia()-energiaAtaque);
 			}
 		}
+		
+	}
+	
+	public void defender(){
+		
+		if(turno.equals(p1)&&max1>p1.getEnergia()){
+			p1.setEnergia(p1.getEnergia()+max1*p1.getDefensa()/100);
+		}else if (turno.equals(p2)&&max2>p2.getEnergia()){
+			p2.setEnergia(p2.getEnergia()+max2*p2.getDefensa()/100);
+		}
+		
+		if(turno.equals(p1)&&vida1>p1.getAtaque()){
+			if(p1.getAtaque()+vida1*p1.getDefensa()/250<=vida1){
+			p1.setAtaque(p1.getAtaque()+vida1*p1.getDefensa()/250);
+			}else{
+				p1.setAtaque(vida1);
+			}
+			
+		}else if (turno.equals(p2)&&vida2>p2.getAtaque()){
+			if(p2.getAtaque()+vida2*p2.getDefensa()/250<=vida2){
+				p2.setAtaque(p2.getAtaque()+vida2*p2.getDefensa()/250);
+			}else{
+				p2.setAtaque(vida2);
+			}
+		}
+		
 		
 	}
 
@@ -95,10 +127,20 @@ public class ABMCPersonaje {
 		
 		this.p1=p1;
 		this.p2=p2;
+		max1=(int) p1.getEnergia();
+		max2=(int) p2.getEnergia();
+		vida1= p1.getAtaque();
+		vida2=p2.getAtaque();
 	}
 	
 	public void clearPersonajes(){
 		p1=null;
 		p2=null;
+		turno=null;
+	}
+
+
+	public void acreditarPuntos(Personaje p12) {
+		dataPer.acreditarPuntos(p12);
 	}
 }
