@@ -31,8 +31,12 @@ import javax.swing.event.ChangeListener;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 import java.awt.Choice;
-import java.awt.SystemColor;;
+import java.awt.SystemColor;
+import javax.swing.JProgressBar;;
 	
 public class Interfaz {
 
@@ -50,7 +54,7 @@ public class Interfaz {
 	private Choice choice;
 	private Choice choice2;
 	private JSlider sliderA1,sliderEv1,sliderE1,sliderD1, sliderEv2,sliderE2,sliderD2,sliderA2, sliderBatallaV1 ,sliderBatallaEn1,sliderBatallaD1,sliderBatallaEv1,sliderBatallaV2,sliderBatallaEn2,sliderBatallaD2,sliderBatallaEv2,sliderEnergiaAtaque;
-	private JButton btnDefender, btnAtacar, btnVolver1;
+	private JButton btnDefender, btnAtacar, btnVolver1, btnEliminar, btnModificar, btnCrear;
 	
 	private ABMCPersonaje ctrl;
 	private JLabel labelD1,labelA1,labelEv1,labelEv2,labelEn1,labelEn2,labelD2,labelA2, labelTurno, labelBatallaEv2, labelBatallaD2,labelBatallaV2, labelBatallaEn2 , labelBatallaEv1, labelBatallaV1, labelBatallaD1, labelBatallaEn1,lblNombrePersonaje2 , lblNombrePersonaje1;
@@ -67,6 +71,24 @@ public class Interfaz {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
+				 try {
+			            // Set cross-platform Java L&F (also called "Metal")
+			        UIManager.setLookAndFeel(
+			            UIManager.getSystemLookAndFeelClassName());
+			    } 
+			    catch (UnsupportedLookAndFeelException e) {
+			       // handle exception
+			    }
+			    catch (ClassNotFoundException e) {
+			       // handle exception
+			    }
+			    catch (InstantiationException e) {
+			       // handle exception
+			    }
+			    catch (IllegalAccessException e) {
+			       // handle exception
+			    }
+				
 				try {
 					Interfaz window = new Interfaz();
 					window.frame.setVisible(true);
@@ -81,6 +103,7 @@ public class Interfaz {
 	 * Create the application.
 	 */
 	public Interfaz() {
+		
 		initialize();
 		ctrl= new ABMCPersonaje();
 	}
@@ -96,7 +119,7 @@ public class Interfaz {
 		frame.getContentPane().setLayout(cc);
 		
 		panelMenu = new JPanel();
-		panelMenu.setBackground(SystemColor.activeCaption);
+		panelMenu.setBackground(SystemColor.textHighlight);
 		frame.getContentPane().add(panelMenu, "panelMenu");
 		
 		panelCreacion = new JPanel();
@@ -138,20 +161,23 @@ public class Interfaz {
 		txtInfo.setBounds(603, 23, 0, 0);
 		panelCreacion.add(txtInfo);
 		
-		JButton btnEliminar = new JButton("Eliminar");
+		btnEliminar = new JButton("Eliminar");
 		btnEliminar.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
 		btnEliminar.setBounds(426, 337, 121, 34);
+		btnEliminar.setVisible(false);
 		panelCreacion.add(btnEliminar);
 		btnEliminar.setForeground(Color.RED);
 		
-		JButton btnCrear = new JButton("Crear");
+		btnCrear = new JButton("Guardar");
 		btnCrear.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
-		btnCrear.setBounds(63, 337, 121, 34);
+		btnCrear.setBounds(42, 337, 172, 34);
+		btnCrear.setVisible(false);
 		panelCreacion.add(btnCrear);
 		
 		
-		JButton btnModificar = new JButton("Modificar");
+		btnModificar = new JButton("Modificar");
 		btnModificar.setFont(new Font("Lucida Sans", Font.PLAIN, 16));
+		btnModificar.setVisible(false);
 		btnModificar.setBounds(242, 337, 121, 34);
 		panelCreacion.add(btnModificar);
 		
@@ -321,6 +347,19 @@ public class Interfaz {
 		btnVolver.setIcon(new ImageIcon(Interfaz.class.getResource("/com/sun/javafx/scene/control/skin/caspian/fxvk-backspace-button.png")));
 		btnVolver.setBounds(10, 11, 57, 31);
 		panelCreacion.add(btnVolver);
+		
+		JButton btnNuevo = new JButton("Nuevo personaje");
+		btnNuevo.setFont(new Font("Lucida Sans", Font.PLAIN, 17));
+		btnNuevo.setBounds(95, 7, 172, 34);
+		btnNuevo.addMouseListener(new MouseAdapter(){
+			@Override
+			public void mouseClicked(MouseEvent arg0){
+				btnCrear.setVisible(true);
+				btnEliminar.setVisible(false);
+				btnModificar.setVisible(false);
+			}
+		});
+		panelCreacion.add(btnNuevo);
 		
 		panelSeleccionPersonaje = new JPanel();
 		frame.getContentPane().add(panelSeleccionPersonaje, "name_491738062685251");
@@ -542,10 +581,19 @@ public class Interfaz {
 		btnListo.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				panelSeleccionPersonaje.setVisible(false);
-				panelJugar.setVisible(true);
-				limpiarCampos();
-				setDatosBatalla(choice.getSelectedItem(),choice2.getSelectedItem());
+				boolean success=true;
+				try{
+					
+					setDatosBatalla(choice.getSelectedItem(),choice2.getSelectedItem());
+				}catch(Exception e){
+					notifyUser("Seleccionar personajes");
+					success=false;
+				}
+				if(success){					
+					panelSeleccionPersonaje.setVisible(false);
+					panelJugar.setVisible(true);
+					limpiarDatosJugadores();					
+				}
 			}
 		});
 		panelSeleccionPersonaje.add(btnListo);
@@ -823,6 +871,7 @@ public class Interfaz {
 		panelJugar.add(separator_8);
 		
 		separator_9 = new JSeparator();
+		separator_9.setForeground(SystemColor.textHighlight);
 		separator_9.setBounds(10, 110, 630, 73);
 		panelJugar.add(separator_9);
 			
@@ -834,6 +883,9 @@ public class Interfaz {
 				panelCreacion.setVisible(false);
 				panelMenu.setVisible(true);
 				limpiarCampos();
+				btnModificar.setVisible(false);
+				btnEliminar.setVisible(false);
+				btnCrear.setVisible(false);
 			}
 		});
 		
@@ -847,6 +899,8 @@ public class Interfaz {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				buscar();
+				btnCrear.setVisible(false);
+				
 			}
 		});
 		btnModificar.addActionListener(new ActionListener() {
@@ -864,7 +918,9 @@ public class Interfaz {
 		btnEliminar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if(JOptionPane.showConfirmDialog(panelCreacion, "Esta seguro que desea eliminar el personaje?")==JOptionPane.YES_OPTION){
 				eliminar();
+				}
 			}
 		});
 	}
@@ -901,12 +957,13 @@ public class Interfaz {
 			if(p1.getAtaque()<=0){
 				notifyUser("FIN DEL JUEGO " + p2.getNombre() + " es el ganador \n Se acreditaron 10 puntos para gastar");
 				ctrl.acreditarPuntos(p2);
-				
+				ctrl.clearPersonajes();
 				panelJugar.setVisible(false);
 				panelMenu.setVisible(true);
 			}else{
 				notifyUser("FIN DEL JUEGO\n " + p1.getNombre() + " es el ganador \n Se acreditaron 10 puntos para gastar");
 				ctrl.acreditarPuntos(p1);
+				ctrl.clearPersonajes();
 				panelJugar.setVisible(false);
 				panelMenu.setVisible(true);
 			}
@@ -975,6 +1032,28 @@ public class Interfaz {
 		}
 	}
 	
+	private void limpiarDatosJugadores(){
+		
+		labelD1.setText(String.valueOf(0));
+		labelEn1.setText(String.valueOf(0));
+		labelA1.setText(String.valueOf(0));
+		labelEv1.setText(String.valueOf(0));
+		sliderA1.setValue(0);
+		sliderD1.setValue(0);
+		sliderE1.setValue(0);
+		sliderEv1.setValue(0);			
+
+		
+		labelD2.setText(String.valueOf(0));
+		labelEn2.setText(String.valueOf(0));
+		labelA2.setText(String.valueOf(0));
+		labelEv2.setText(String.valueOf(0));
+		sliderA2.setValue(0);
+		sliderD2.setValue(0);
+		sliderE2.setValue(0);
+		sliderEv2.setValue(0);	
+	}
+	
 	private void setDatosPlayer1(String nom){
 		Personaje p = new Personaje();
 		p = ctrl.getPersonajeByNom(nom);
@@ -1012,20 +1091,9 @@ public class Interfaz {
 		choice.add("Seleccionar...");
 		choice2.add("Seleccionar...");
 		nombres = ctrl.cargarNombres();
-		for(String nom: nombres){
-			
-			/*for (int i =0; i<choice.getItemCount(); i++) {
-		        if (choice.getItem(i).equals(nom)) {
-		        	existe=true;
-		        	break;
-		        }else{
-		        	existe=false;
-		        }
-		    }
-			if(!existe)*/
-			
-        choice.add(nom.toUpperCase());
-        choice2.add(nom.toUpperCase());
+		for(String nom: nombres){		
+			choice.add(nom.toUpperCase());
+			choice2.add(nom.toUpperCase());
 
 		}
 	}
@@ -1033,17 +1101,26 @@ public class Interfaz {
 	
 	
 	protected void eliminar() {
+		total=200;
+		btnModificar.setVisible(false);
+		btnEliminar.setVisible(false);
+		
 		ctrl.delete(MapearDeFormularioId());
 		
+		notifyUser("Personaje eliminado con éxito!");
 		limpiarCampos();
 	}
 
 	protected void modificar() {
 		try {
 			if(datosValidos()){
+				total=200;
+				btnModificar.setVisible(false);
+				btnEliminar.setVisible(false);
 				ctrl.update(MapearDeFormularioConId());
 				notifyUser("Personaje: " + txtNombre.getText() + " modificado con éxito!");
 				limpiarCampos();
+				
 			}
 		} catch (ArithmeticException are){
 			notifyUser("Ha ocurrido algo inesperado, consulte al administrador de sistemas.", are, Level.ERROR);
@@ -1080,7 +1157,8 @@ public class Interfaz {
 			ctrl.add(p);
 			notifyUser(txtNombre.getText() + " creado con éxito");
 			MapearAFormulario(p);
-			limpiarCampos();		
+			limpiarCampos();
+			btnCrear.setVisible(false);
 				
 			}else{
 				notifyUser("Nombre en uso");
@@ -1107,8 +1185,10 @@ public class Interfaz {
 		if(idValido()){
 		Personaje p = ctrl.getPersonaje(MapearDeFormularioId());
 		if(p!=null){
-			//total = (int) (p.getAtaque()+p.getDefensa()+p.getEnergia()+p.getEvasion()+p.getPuntosTotales());
+			total = (int) (p.getAtaque()+p.getDefensa()+p.getEnergia()+p.getEvasion()+p.getPuntosTotales());
 			MapearAFormulario(p);
+			btnModificar.setVisible(true);
+			btnEliminar.setVisible(true);
 			
 		}else{
 			notifyUser("Personaje con id: "+txtId.getText() + " no encontrado");
